@@ -88,6 +88,7 @@ class NvshenspiderDownloaderMiddleware(object):
         # - return a Response object
         # - return a Request object
         # - or raise IgnoreRequest
+        response.flags = request.flags
         return response
 
     def process_exception(self, request, exception, spider):

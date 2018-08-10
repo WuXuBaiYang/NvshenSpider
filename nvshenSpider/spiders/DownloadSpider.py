@@ -27,11 +27,9 @@ class DownloadspiderSpider(scrapy.Spider):
                     _path, md5(url[:url.rindex(".")].encode("utf-8")).hexdigest(), url[url.rindex("."):])
                 if not os.path.exists(_file_path):
                     yield scrapy.Request(url, dont_filter=True, flags=[_file_path])
-        pass
 
     def parse(self, response):
         _file_path = response.flags[0]
         with open(_file_path, "wb") as f:
             f.write(response.body)
             print("文件已写入", _file_path)
-        pass

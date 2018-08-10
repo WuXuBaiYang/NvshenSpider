@@ -10,7 +10,7 @@ class DownloadspiderSpider(scrapy.Spider):
     name = 'DownloadSpider'
     allowed_domains = ['t1.onvshen.com']
     start_urls = ['http://t1.onvshen.com/']
-    dir_path = "/Volumes/移动城堡/spider_data/nvshen_data"
+    dir_path = "/Volumes/移动城堡/spider_data/nvshen_data"  # 根据运行环境进行修改
     file_pattern = r"/|\.|\\"
 
     print("正在初始化数据库")
@@ -18,8 +18,8 @@ class DownloadspiderSpider(scrapy.Spider):
     collection = client.python_spider.nvshen_spider
 
     def start_requests(self):
-        for item in self.collection.find({"album_photos": {"$exists": True}}).limit(5):
-            _path = "%s/%s" % (self.dir_path, re.sub(self.file_pattern, "", item["title"]))
+        for item in self.collection.find({"album_photos": {"$exists": True}}).limit(1):
+            _path = "%s/%s[%dP]" % (self.dir_path, re.sub(self.file_pattern, "", item["title"]), item["album_count"])
             if not os.path.exists(_path):
                 os.mkdir(_path)
             for url in item["album_photos"]:

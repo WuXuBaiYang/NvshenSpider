@@ -110,3 +110,4 @@ for_todo.md
 .idea/
 config.yml.local
 build.sh
+./jobinfo

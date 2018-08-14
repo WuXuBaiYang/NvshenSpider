@@ -18,7 +18,7 @@ class DownloadspiderSpider(scrapy.Spider):
     collection = client.python_spider.nvshen_spider
 
     def start_requests(self):
-        for item in self.collection.find({"album_photos": {"$exists": True}}).limit(1):
+        for item in self.collection.find({"album_photos": {"$exists": True}}):
             _path = "%s/%s[%dP]" % (self.dir_path, re.sub(self.file_pattern, "", item["title"]), item["album_count"])
             if not os.path.exists(_path):
                 os.mkdir(_path)

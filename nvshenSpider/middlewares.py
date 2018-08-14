@@ -78,7 +78,7 @@ class NvshenspiderDownloaderMiddleware(object):
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
-        request.meta['proxy'] = 'https://127.0.0.1:1087'
+        # request.meta['proxy'] = 'https://127.0.0.1:1087'
         return None
 
     def process_response(self, request, response, spider):

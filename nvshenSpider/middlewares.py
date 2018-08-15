@@ -81,6 +81,10 @@ class NvshenspiderDownloaderMiddleware(object):
         # request.meta['proxy'] = 'https://127.0.0.1:1087'
         return None
 
+    from pymongo import MongoClient
+    client = MongoClient("127.0.0.1", 27017)
+    collection = client.python_spider.nvshen_spider_error
+
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.
 
@@ -89,6 +93,11 @@ class NvshenspiderDownloaderMiddleware(object):
         # - return a Request object
         # - or raise IgnoreRequest
         response.flags = request.flags
+        if response.status != 200:
+            try:
+                self.collection.insert({"url": response.url})
+            except:
+                print("错误已记录")
         return response
 
     def process_exception(self, request, exception, spider):

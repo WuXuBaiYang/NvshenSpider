@@ -16,8 +16,11 @@ class DownloadspiderSpider(scrapy.Spider):
     print("正在初始化数据库")
     client = MongoClient("127.0.0.1", 27017)
     collection = client.python_spider.nvshen_spider
+    collection_error = client.python_spider.nvshen_spider_error
 
     def start_requests(self):
+        error_urls = [item["url"] for item in self.collection_error.find()]
+        index = 0
         for item in self.collection.find({"album_photos": {"$exists": True}}):
             _path = "%s/%s[%dP]" % (self.dir_path, re.sub(self.file_pattern, "", item["title"]), item["album_count"])
             if not os.path.exists(_path):
@@ -25,8 +28,11 @@ class DownloadspiderSpider(scrapy.Spider):
             for url in item["album_photos"]:
                 _file_path = "%s/%s%s" % (
                     _path, md5(url[:url.rindex(".")].encode("utf-8")).hexdigest(), url[url.rindex("."):])
-                if not os.path.exists(_file_path):
-                    yield scrapy.Request(url, dont_filter=True, flags=[_file_path])
+                if not os.path.exists(_file_path) and url not in error_urls:
+                    yield scrapy.Request(url, dont_filter=True, flags=[_file_path, "download"])
+                else:
+                    print(index, "文件已存在或下载错误")
+                    index += 1
 
     def parse(self, response):
         _file_path = response.flags[0]

@@ -33,9 +33,13 @@ if __name__ == "__main__":
             index += 1
             target_file = "%s%s.zip" % (target_path, dir_path[dir_path.rindex("/"):])
             if not os.path.exists(target_file):
-                executor.submit(zip_dir, dir_path, target_file, index)
-                print(index, "正在压缩", target_file)
+                if len(file_names) > 0:
+                    executor.submit(zip_dir, dir_path, target_file, index)
+                    print(index, "正在压缩", target_file)
+                else:
+                    print(index, "文件夹为空")
             else:
                 print(index, "文件已存在")
+            break
         executor.shutdown()
         print("全部处理完成")
